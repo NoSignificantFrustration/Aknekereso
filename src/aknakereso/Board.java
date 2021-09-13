@@ -31,7 +31,7 @@ public class Board {
                 emptyCells.add(theGrid[i][j]);
             }
         }
-        
+        PlaceBombs(bombs);
     }
     
     private void PlaceBombs(int b){
@@ -41,13 +41,9 @@ public class Board {
             cell.isBomb = true;
             emptyCells.remove(cell);
             bombCells.add(cell);
-            
-            if (cell.col > 0 && cell.row > 0) {
-                theGrid[cell.col-1][cell.row].adjacentBombs += 1;
-                theGrid[cell.col-1][cell.row-1].adjacentBombs += 1;
-                theGrid[cell.col][cell.row-1].adjacentBombs += 1;
-            } else if(cell.row > 0){
-                theGrid[cell.col][cell.row-1].adjacentBombs += 1;
+            for (Cell c : Neighbours(cell)) {
+                c.adjacentBombs++;
+                
             }
         }
         
@@ -56,5 +52,20 @@ public class Board {
     private int RandomChoice(int max){
         Random r = new Random();
         return r.nextInt(max);
+    }
+    
+    public ArrayList<Cell> Neighbours(Cell cell){
+        
+        ArrayList<Cell> neighbours = new ArrayList<>();
+        int r = cell.row;
+        int c = cell.col;
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                if (r+i >= 0 && r+i < size && c+j >= 0 && c+j < size) {
+                    neighbours.add(theGrid[r + i][ c + j]);
+                }
+            }
+        }
+        return  neighbours;
     }
 }
